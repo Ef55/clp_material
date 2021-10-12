@@ -7,7 +7,7 @@ CLPSPEC_DIR="<Path to CLPSPEC repository>/compiler"
 BASE_DIR=$( pwd )
 
 # To be changed for each lab
-TESTS="InterpreterTests.scala ExecutionTests.scala CompilerTest.scala TestUtils.scala TestSuite.scala"
+TESTS="<TEST FILES>"
 
 # Setup CLPSPEC
 cd $CLPSPEC_DIR
