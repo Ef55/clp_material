@@ -1,0 +1,1 @@
+def interpret(expr: Expr)(implicit locals: Map[Identifier, Value]): Value

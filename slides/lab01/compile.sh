@@ -1,0 +1,1 @@
+pdflatex -output-directory=build -interaction=batchmode -shell-escape presentation.tex >/dev/null

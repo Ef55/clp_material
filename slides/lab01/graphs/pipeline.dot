@@ -1,0 +1,43 @@
+digraph{
+    compound=true;
+    rankdir=LR;
+    ranksep=.7;
+    nodesep=.05;
+    bgcolor="#00000000";
+    node [shape=rect];
+
+    input [shape=none];
+
+    subgraph cluster_frontend {
+        label="Front end";
+        peripheries=5;
+
+        lexer [label="Lexer"];
+        parser [label="Parser"];
+        nanalyzer [label="Name analyzer"]
+        typer [label="Type checker"];
+
+        lexer -> parser -> nanalyzer -> typer
+    }
+
+    subgraph cluster_backend {
+        label="Back ends";
+        peripheries=5;
+
+        interpreter [label="Interpreter"];
+        codegen [label="Code Gen."];
+    }
+
+    subgraph cluser_results {
+        result [shape=none, label="«result»"];
+        webass [shape=none, label="web assembly"];
+    }
+
+    input -> lexer [lhead=cluster_frontend];
+
+    typer -> interpreter [ltail=cluster_frontend, lhead=cluster_backend];
+    interpreter -> result [ltail=cluster_backend];
+
+    typer -> codegen [ltail=cluster_frontend, lhead=cluster_backend];
+    codegen -> webass [ltail=cluster_backend];
+}

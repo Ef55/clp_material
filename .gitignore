@@ -1,0 +1,6 @@
+.vscode/
+
+# Don't ask me why vscode generates scala related files for latex...
+.metals/
+project/
+target/

@@ -1,0 +1,9 @@
+sbt:amyc> run examples/Bogus.scala
+[info] running amyc.Main examples/Bogus.scala
+[ Error ] examples/Bogus.scala:2:17: Type error: expected Boolean, found String
+[ Error ]                 "Amy <3" || 5
+[ Error ]                 ^
+[ Error ] examples/Bogus.scala:2:29: Type error: expected Boolean, found Int
+[ Error ]                 "Amy <3" || 5
+[ Error ]                             ^
+[ Fatal ] There were errors.
