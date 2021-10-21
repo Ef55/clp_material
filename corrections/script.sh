@@ -1,21 +1,46 @@
 #!/bin/bash
+set -e
 
 # This script tries to be as agnostic as possible to the format of the archive provided by the students
 # Fell free to report any archive which is not recoginized
 
-CLPSPEC_DIR="<Path to CLPSPEC repository>/compiler"
-BASE_DIR=$( pwd )
+# Variables to set
+# ==================================================
 
-# To be changed for each lab
-TESTS="<TEST FILES>"
+CLPSPEC_DIR="<Path to CLPSPEC repository>/compiler"
+TEST_SET="<Lab number>"
+
+
+# Additional variables
+# ==================================================
+
+BRANCH="amy2021"
+MOODLE_ARCH_FORMAT="CS-320-*"
+
+# Actual script
+# ==================================================
+
+TESTS="CompilerTest.scala TestUtils.scala TestSuite.scala"
+if [[ $TEST_SET = 1 ]]; then
+    TESTS+=" InterpreterTests.scala ExecutionTests.scala"
+
+elif [[ $TEST_SET = 2 ]]; then
+    TESTS+=" LexerTests.scala"
+
+else
+    echo "Unknown test set: ${TEST_SET}"
+    exit -1
+fi
+
 
 # Setup CLPSPEC
+BASE_DIR=$( pwd )
 cd $CLPSPEC_DIR
 
 if [ -z "$(git status --porcelain)" ]; then
     # Working directory clean
     echo "CLPSPEC is clear"
-    git checkout amy2021 > /dev/null
+    git checkout ${BRANCH} > /dev/null
 else
     # Uncommitted changes
     echo "Please clean the working tree of CLPSPECS"
@@ -29,7 +54,7 @@ cd $BASE_DIR
 rm -rf tmp
 mkdir -p tmp
 
-unzip -o -q -j -d tmp "CS-320-*"
+unzip -o -q -j -d tmp ${MOODLE_ARCH_FORMAT}
 
 for archive in tmp/*; do
 
@@ -52,7 +77,7 @@ for archive in tmp/*; do
 
     # Run the submissions
     echo "Verifying: ${group}"
-    cp -f -r ${group}/src/ ${CLPSPEC_DIR}
+    cp -f -r ${group}/src ${CLPSPEC_DIR}
     cd ${CLPSPEC_DIR}
 
     git --no-pager diff --output="${BASE_DIR}/${group}.diff"
