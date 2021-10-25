@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # This script tries to be as agnostic as possible to the format of the archive provided by the students
 # Fell free to report any archive which is not recoginized
@@ -64,13 +63,13 @@ for archive in tmp/*; do
 
     mkdir -p $group
 
-    files=$( zipinfo -1 ${archive} | grep ".*src/amyc/.*.scala$" )
+    files=$( zipinfo -1 ${archive} | grep ".*src/amyc/.*.scala$" | awk '{ printf("\"%s\"\n", $0);  }'   )
 
     rm -rf ${group}
-    unzip -o -q ${archive} ${files} -d ${group}
+    echo ${files} | xargs unzip -o -q ${archive} -d ${group}
 
     src=$( find ${group} -path "*/src" )
-    mv $src tmp/
+    mv "${src}" tmp/
     rm -rf ${group}/*
     mv tmp/src ${group}
 
