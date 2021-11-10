@@ -6,8 +6,8 @@
 # Variables to set
 # ==================================================
 
-CLPSPEC_DIR="<Path to CLPSPEC repository>/compiler"
-TEST_SET="<Lab number>"
+CLPSPEC_DIR="<CLPSEPC PATH>/compiler"
+TEST_SET="<LAB NUMBER>"
 
 
 # Additional variables
@@ -19,12 +19,17 @@ MOODLE_ARCH_FORMAT="CS-320-*"
 # Actual script
 # ==================================================
 
-TESTS="CompilerTest.scala TestUtils.scala TestSuite.scala"
+TESTS="CompilerTest.scala TestUtils.scala TestSuite.scala"  # Tests which will be run
+DEP=""                                                      # Files which WON'T be taken from the student's submission
 if [[ $TEST_SET = 1 ]]; then
     TESTS+=" InterpreterTests.scala ExecutionTests.scala"
 
 elif [[ $TEST_SET = 2 ]]; then
     TESTS+=" LexerTests.scala"
+
+elif [[ $TEST_SET = 3 ]]; then
+    TESTS+=" ParserTests.scala"
+    DEP+=" src/amyc/parsing/Lexer.scala"
 
 else
     echo "Unknown test set: ${TEST_SET}"
@@ -39,7 +44,7 @@ cd $CLPSPEC_DIR
 if [ -z "$(git status --porcelain)" ]; then
     # Working directory clean
     echo "CLPSPEC is clear"
-    git checkout ${BRANCH} > /dev/null
+    git checkout ${BRANCH} > /dev/null 2> /dev/null
 else
     # Uncommitted changes
     echo "Please clean the working tree of CLPSPECS"
@@ -79,17 +84,25 @@ for archive in tmp/*; do
     cp -f -r ${group}/src ${CLPSPEC_DIR}
     cd ${CLPSPEC_DIR}
 
-    git --no-pager diff --output="${BASE_DIR}/${group}.diff"
+    ## Restore previous labs files (to avoid penalizing mistakes from previous labs)
+    git checkout -- ${DEP}
+
+    filename="${BASE_DIR}/${group}.diff"
+    git --no-pager diff --output=${filename}
+    echo "Generated: ${filename}"
 
     rm test/scala/amyc/test/*
     for test in ${TESTS}; do
-        git checkout test/scala/amyc/test/${test}
+        git checkout test/scala/amyc/test/${test} 2> /dev/null
     done
 
-    sbt test > "${BASE_DIR}/${group}.out"
+    filename="${BASE_DIR}/${group}.out"
+    sbt test > ${filename}
+    echo "Generated: ${filename}"
 
     git checkout -- .
     git clean -f
+    echo "Cleaned clpspecs"
     cd ${BASE_DIR}
 
 done
