@@ -84,13 +84,6 @@ for archive in tmp/*; do
     cp -f -r ${group}/src ${CLPSPEC_DIR}
     cd ${CLPSPEC_DIR}
 
-    ## Restore previous labs files (to avoid penalizing mistakes from previous labs)
-    git checkout -- ${DEP}
-
-    filename="${BASE_DIR}/${group}.diff"
-    git --no-pager diff --output=${filename}
-    echo "Generated: ${filename}"
-
     rm test/scala/amyc/test/*
     for test in ${TESTS}; do
         git checkout test/scala/amyc/test/${test} 2> /dev/null
@@ -98,6 +91,17 @@ for archive in tmp/*; do
 
     filename="${BASE_DIR}/${group}.out"
     sbt test > ${filename}
+    echo "Generated: ${filename}"
+
+    ## Restore previous labs files (to avoid penalizing mistakes from previous labs)
+    git checkout -- ${DEP}
+
+    filename="${BASE_DIR}/${group}.isolated.out"
+    sbt test > ${filename}
+    echo "Generated: ${filename}"
+
+    filename="${BASE_DIR}/${group}.diff"
+    git --no-pager diff --output=${filename} -- "src/*"
     echo "Generated: ${filename}"
 
     git checkout -- .
