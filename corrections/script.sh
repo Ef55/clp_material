@@ -31,6 +31,10 @@ elif [[ $TEST_SET = 3 ]]; then
     TESTS+=" ParserTests.scala"
     DEP+=" src/amyc/parsing/Lexer.scala"
 
+elif [[ $TEST_SET = 4 ]]; then
+    TESTS+=" TyperTests.scala"
+    DEP+=" src/amyc/parsing/Lexer.scala src/amyc/parsing/Parser.scala"
+
 else
     echo "Unknown test set: ${TEST_SET}"
     exit -1
