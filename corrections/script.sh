@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # This script tries to be as agnostic as possible to the format of the archive provided by the students
