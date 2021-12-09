@@ -35,6 +35,10 @@ elif [[ $TEST_SET = 4 ]]; then
     TESTS+=" TyperTests.scala"
     DEP+=" src/amyc/parsing/Lexer.scala src/amyc/parsing/Parser.scala"
 
+elif [[ $TEST_SET = 5 ]]; then
+    TESTS+=" CodegenTests.scala ExecutionTests.scala"
+    DEP+=" src/amyc/parsing/Lexer.scala src/amyc/parsing/Parser.scala src/amyc/analyzer/TypeChecker.scala"
+
 else
     echo "Unknown test set: ${TEST_SET}"
     exit -1
@@ -45,7 +49,7 @@ fi
 BASE_DIR=$( pwd )
 cd $CLPSPEC_DIR
 
-if [ -z "$(git status --porcelain)" ]; then
+if [ -z "$(git status --porcelain -uno)" ]; then
     # Working directory clean
     echo "CLPSPEC is clear"
     git checkout ${BRANCH} > /dev/null 2> /dev/null
